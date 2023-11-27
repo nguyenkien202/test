@@ -54,7 +54,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class CreateNoteActivity extends AppCompatActivity implements DatePickerUtil.OnDateSelectedListener{
+public class CreateNoteActivity extends AppCompatActivity implements DatePickerUtil.OnDateSelectedListener {
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textDateTime;
@@ -79,6 +79,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
 
     private Note alreadyAvailableNote;
     private long dateTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
         textDateTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerUtil.showDatePicker(CreateNoteActivity.this,CreateNoteActivity.this);
+                DatePickerUtil.showDatePicker(CreateNoteActivity.this, CreateNoteActivity.this);
             }
         });
         textDateTime.setText(
@@ -123,7 +124,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
         selectedNoteColor = "#333333";
         seletedImagePath = "";
 
-        if(getIntent().getBooleanExtra("isViewOrUpdate", false)) {
+        if (getIntent().getBooleanExtra("isViewOrUpdate", false)) {
             alreadyAvailableNote = (Note) getIntent().getSerializableExtra("note");
             setViewOrUpdateNote();
         }
@@ -146,15 +147,15 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
             }
         });
 
-        if(getIntent().getBooleanExtra("isFromQuickAction", false)){
+        if (getIntent().getBooleanExtra("isFromQuickAction", false)) {
             String type = getIntent().getStringExtra("quickActionType");
-            if(type!=null){
-                if(type.equals("image")){
+            if (type != null) {
+                if (type.equals("image")) {
                     seletedImagePath = getIntent().getStringExtra("imagePath");
                     imageNote.setImageBitmap(BitmapFactory.decodeFile(seletedImagePath));
                     imageNote.setVisibility(View.VISIBLE);
                     findViewById(R.id.imageRemoveImage).setVisibility(View.VISIBLE);
-                }else if(type.equals("URL")){
+                } else if (type.equals("URL")) {
                     textWebURL.setText(getIntent().getStringExtra("URL"));
                     layoutWebURL.setVisibility(View.VISIBLE);
                 }
@@ -171,31 +172,31 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
         inputNoteText.setText(alreadyAvailableNote.getNoteText());
         Log.d("asgagwawgagwawgawg", "setViewOrUpdateNote: " + alreadyAvailableNote.getDatetime());
         textDateTime.setText(alreadyAvailableNote.getDatetime());
-        if(alreadyAvailableNote.getImagePath()!= null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
+        if (alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
             imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
             imageNote.setVisibility(View.VISIBLE);
             findViewById(R.id.imageRemoveImage).setVisibility(View.VISIBLE);
             seletedImagePath = alreadyAvailableNote.getImagePath();
         }
 
-        if(alreadyAvailableNote.getWebLink()!=null && !alreadyAvailableNote.getWebLink().trim().isEmpty()){
+        if (alreadyAvailableNote.getWebLink() != null && !alreadyAvailableNote.getWebLink().trim().isEmpty()) {
             textWebURL.setText(alreadyAvailableNote.getWebLink());
             layoutWebURL.setVisibility(View.VISIBLE);
         }
         //add
-        selectedNoteColor=alreadyAvailableNote.getColor();
+        selectedNoteColor = alreadyAvailableNote.getColor();
         setSubtitleIndicatorColor();
         // end
 
     }
 
     private void saveNote() {
-        if(inputNoteTitle.getText().toString().trim().isEmpty()) {
+        if (inputNoteTitle.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Note title can't be empty!", Toast.LENGTH_SHORT).show();
             return;
-        }else if(inputNoteSubtitle.getText().toString().trim().isEmpty()
-            && inputNoteText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Note can't be empty!",Toast.LENGTH_SHORT).show();
+        } else if (inputNoteSubtitle.getText().toString().trim().isEmpty()
+                && inputNoteText.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Note can't be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -208,11 +209,11 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
         note.setImagePath(seletedImagePath);
         note.setDateLongFormat(dateTime);
 
-        if(layoutWebURL.getVisibility() == View.VISIBLE){
+        if (layoutWebURL.getVisibility() == View.VISIBLE) {
             note.setWebLink(textWebURL.getText().toString());
         }
 
-        if(alreadyAvailableNote != null) {
+        if (alreadyAvailableNote != null) {
             note.setId(alreadyAvailableNote.getId());
         }
 
@@ -244,9 +245,9 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
         layoutMiscellaneous.findViewById(R.id.textMiscellaneous).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED){
+                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }else {
+                } else {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             }
@@ -332,17 +333,17 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
                 ) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
                             CreateNoteActivity.this,
-                            new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                             REQUEST_CODE_STORAGE_PERMISSION
                     );
-                }else {
+                } else {
                     selectImage();
                 }
             }
         });
 
-        if(alreadyAvailableNote != null && alreadyAvailableNote.getColor() != null && alreadyAvailableNote.getColor().trim().isEmpty()){
-            switch (alreadyAvailableNote.getColor()){
+        if (alreadyAvailableNote != null && alreadyAvailableNote.getColor() != null && alreadyAvailableNote.getColor().trim().isEmpty()) {
+            switch (alreadyAvailableNote.getColor()) {
                 case "#FDBE3B":
                     layoutMiscellaneous.findViewById(R.id.viewColor2).performClick();
                     break;
@@ -366,7 +367,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
             }
         });
 
-        if(alreadyAvailableNote!= null) {
+        if (alreadyAvailableNote != null) {
             layoutMiscellaneous.findViewById(R.id.layoutDeleteNote).setVisibility(View.VISIBLE);
             layoutMiscellaneous.findViewById(R.id.layoutDeleteNote).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -427,7 +428,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
     }
 
     private void showDeleteNoteDialog() {
-        if(dialogDeleteNote == null) {
+        if (dialogDeleteNote == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateNoteActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_delete_note,
@@ -435,7 +436,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
             );
             builder.setView(view);
             dialogDeleteNote = builder.create();
-            if(dialogDeleteNote.getWindow()!= null){
+            if (dialogDeleteNote.getWindow() != null) {
                 dialogDeleteNote.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
             view.findViewById(R.id.textDeleteNote).setOnClickListener(new View.OnClickListener() {
@@ -483,8 +484,8 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
 
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-     //   if(intent.resolveActivity(getPackageManager())!= null) {
-       //     startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+        //   if(intent.resolveActivity(getPackageManager())!= null) {
+        //     startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
         try {
             startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
         } catch (ActivityNotFoundException e) {
@@ -495,8 +496,9 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0);{
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0) ;
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectImage();
             } else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
@@ -507,10 +509,10 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
-            if(data != null) {
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
+            if (data != null) {
                 Uri selectedImageUri = data.getData();
-                if(selectedImageUri != null) {
+                if (selectedImageUri != null) {
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -520,7 +522,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
 
                         seletedImagePath = getPathFromUri(selectedImageUri);
 
-                    }catch (Exception exception) {
+                    } catch (Exception exception) {
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -532,9 +534,9 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
         String filePath;
         Cursor cursor = getContentResolver()
                 .query(contentUri, null, null, null, null);
-        if(cursor == null){
+        if (cursor == null) {
             filePath = contentUri.getPath();
-        }else{
+        } else {
             cursor.moveToFirst();
             int index = cursor.getColumnIndex("_data");
             filePath = cursor.getString(index);
@@ -544,7 +546,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
     }
 
     private void showAddURLDialog() {
-        if(dialogAddURL == null) {
+        if (dialogAddURL == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateNoteActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_add_url,
@@ -553,7 +555,7 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
             builder.setView(view);
 
             dialogAddURL = builder.create();
-            if(dialogAddURL.getWindow() != null) {
+            if (dialogAddURL.getWindow() != null) {
                 dialogAddURL.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
 
@@ -563,10 +565,10 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
             view.findViewById(R.id.textAdd).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(inputURL.getText().toString().trim().isEmpty()){
+                    if (inputURL.getText().toString().trim().isEmpty()) {
                         Toast.makeText(CreateNoteActivity.this, "Enter URL", Toast.LENGTH_SHORT).show();
                     } else if (!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()) {
-                        Toast.makeText(CreateNoteActivity.this,"Enter valid URL", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateNoteActivity.this, "Enter valid URL", Toast.LENGTH_SHORT).show();
                     } else {
                         textWebURL.setText(inputURL.getText().toString());
                         layoutWebURL.setVisibility(View.VISIBLE);
@@ -646,9 +648,9 @@ public class CreateNoteActivity extends AppCompatActivity implements DatePickerU
 
     @Override
     public void onDateSelected(int year, int month, int day) {
-        String dateTime2 = "Năm"+ year + "Tháng" + month + "Ngày" +day;
+        String dateTime2 = "Năm" + year + "Tháng" + month + "Ngày" + day;
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year,month - 1,day);
+        calendar.set(year, month , day);
         dateTime = calendar.getTimeInMillis();
         textDateTime.setText(dateTime2);
     }

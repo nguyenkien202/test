@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         notesSource = notes;
     }
 
-    public void setNotes(List<Note> note){
+    public void setNotes(List<Note> note) {
         this.notes = note;
         notesSource = note;
         notifyDataSetChanged();
@@ -67,7 +68,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             @Override
             public void onClick(View v) {
                 notesListener.onNoteClicked(notes.get(position), position);
-               // notesListener.onNoteClicked(notes.get(holder.getAdapterPosition()), holder.getAdapterPosition());
+                // notesListener.onNoteClicked(notes.get(holder.getAdapterPosition()), holder.getAdapterPosition());
             }
         });
     }
@@ -87,6 +88,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         TextView textTitle, textSubtitle, textDateTime;
         LinearLayout layoutNote;
         RoundedImageView imageNote;
+
         NoteViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
@@ -98,21 +100,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         void setNote(Note note) {
             textTitle.setText(note.getTitle());
-            if(note.getSubtitle().trim().isEmpty()) {
+            if (note.getSubtitle().trim().isEmpty()) {
                 textSubtitle.setVisibility(View.GONE);
-            } else{
+            } else {
                 textSubtitle.setText(note.getSubtitle());
             }
             textDateTime.setText(note.getDatetime());
 
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
-            if(note.getColor() != null) {
+            if (note.getColor() != null) {
                 gradientDrawable.setColor(Color.parseColor(note.getColor()));
             } else {
                 gradientDrawable.setColor(Color.parseColor("#333333"));
             }
 
-            if(note.getImagePath() != null) {
+            if (note.getImagePath() != null) {
                 imageNote.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
                 imageNote.setVisibility(View.VISIBLE);
             } else {
@@ -121,19 +123,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
-    public void searchNotes(final String searchkeywords){
+    public void searchNotes(final String searchkeywords) {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(searchkeywords.trim().isEmpty()){
+                if (searchkeywords.trim().isEmpty()) {
                     notes = notesSource;
-                }else {
+                } else {
                     ArrayList<Note> temp = new ArrayList<>();
                     for (Note note : notesSource) {
-                        if(note.getTitle().toLowerCase().contains(searchkeywords.toLowerCase())
-                        || note.getSubtitle().toLowerCase().contains(searchkeywords.toLowerCase())
-                        || note.getNoteText().toLowerCase().contains(searchkeywords.toLowerCase())){
+                        if (note.getTitle().toLowerCase().contains(searchkeywords.toLowerCase())
+                                || note.getSubtitle().toLowerCase().contains(searchkeywords.toLowerCase())
+                                || note.getNoteText().toLowerCase().contains(searchkeywords.toLowerCase())) {
                             temp.add(note);
                         }
                     }
@@ -149,15 +151,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }, 500);
     }
 
-    public void searchNoteByDate(int year, int moth, int day){
-        for(Note note: notesSource){
+    public void searchNoteByDate(int year, int moth, int day) {
+        Log.d("asgawgawgawg", "searchNoteByDate: " + year);
+        Log.d("asgawgawgawg", "moth: " + moth);
+        Log.d("asgawgawgawg", "day: " + day);
+        for (Note note : notesSource) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(note.getDateLongFormat());
             int noteYear = calendar.get(Calendar.YEAR);
             int noteMonth = calendar.get(Calendar.MONTH);
             int noteDay = calendar.get(Calendar.DAY_OF_MONTH);
+            Log.d("asgawgawg", "noteYear: " + noteYear);
+            Log.d("asgawgawg", "noteMonth: " + noteMonth);
+            Log.d("asgawgawg", "noteDay: " + noteDay);
             ArrayList<Note> temp = new ArrayList<>();
-            if(year == noteYear && moth == noteMonth && day == noteDay){
+            if (year == noteYear && moth  == noteMonth && day == noteDay) {
                 temp.add(note);
             }
             notes = temp;
@@ -166,8 +174,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
-    public void cancelTimer(){
-        if(timer != null){
+    public void cancelTimer() {
+        if (timer != null) {
             timer.cancel();
         }
     }
