@@ -198,6 +198,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setDatetime(textDateTime.getText().toString());
         note.setColor(selectedNoteColor);
         note.setImagePath(seletedImagePath);
+        note.setDateLongFormat(System.currentTimeMillis());
 
         if(layoutWebURL.getVisibility() == View.VISIBLE){
             note.setWebLink(textWebURL.getText().toString());

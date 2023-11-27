@@ -21,6 +21,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,6 +37,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         this.notes = notes;
         this.notesListener = notesListener;
         notesSource = notes;
+    }
+
+    public void setNotes(List<Note> note){
+        this.notes = note;
+        notesSource = note;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -140,6 +147,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 });
             }
         }, 500);
+    }
+
+    public void searchNoteByDate(int year, int moth, int day){
+        for(Note note: notesSource){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(note.getDateLongFormat());
+            int noteYear = calendar.get(Calendar.YEAR);
+            int noteMonth = calendar.get(Calendar.MONTH);
+            int noteDay = calendar.get(Calendar.DAY_OF_MONTH);
+            ArrayList<Note> temp = new ArrayList<>();
+            if(year == noteYear && moth == noteMonth && day == noteDay){
+                temp.add(note);
+            }
+            notes = temp;
+            notifyDataSetChanged();
+
+        }
     }
 
     public void cancelTimer(){

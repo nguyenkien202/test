@@ -2,15 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/main_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context=".activities.MainActivity">
 
     <TextView
         android:id="@+id/textMyNotes"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_20sdp"
@@ -20,13 +20,24 @@
         android:text="@string/my_notes"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/_20sdp"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <DatePicker
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_choose_date"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/textMyNotes"
+        app:layout_constraintTop_toTopOf="@id/textMyNotes"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/date_time_picker"
+        android:text="Choose date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/date_time_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/layoutSearch"
@@ -63,7 +74,7 @@
             android:inputType="text"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorTextHint"
-            android:textSize="@dimen/_13sdp"/>
+            android:textSize="@dimen/_13sdp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -88,7 +99,7 @@
         android:orientation="horizontal"
         android:padding="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="parent">
-        
+
         <ImageView
             android:id="@+id/imageAddNote"
             android:layout_width="@dimen/_23sdp"
@@ -126,10 +137,10 @@
         android:contentDescription="@string/app_name"
         android:padding="@dimen/_5sdp"
         android:src="@drawable/ic_add"
-        app:tint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/layoutQuickActions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/layoutQuickActions"/>
+        app:layout_constraintTop_toTopOf="@+id/layoutQuickActions"
+        app:tint="@color/colorPrimary" />
 
     <Switch
         android:id="@+id/switch1"

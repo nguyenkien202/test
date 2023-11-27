@@ -25,6 +25,9 @@ public class Note implements Serializable {
     @ColumnInfo(name = "note_text")
     private String noteText;
 
+    @ColumnInfo(name = "date_long_format")
+    private Long dateLongFormat;
+
     @ColumnInfo(name = "image_path")
     private String imagePath;
 
@@ -96,6 +99,14 @@ public class Note implements Serializable {
 
     public void setWebLink(String webLink) {
         this.webLink = webLink;
+    }
+
+    public Long getDateLongFormat() {
+        return dateLongFormat;
+    }
+
+    public void setDateLongFormat(Long dateLongFormat) {
+        this.dateLongFormat = dateLongFormat;
     }
 
     @NonNull

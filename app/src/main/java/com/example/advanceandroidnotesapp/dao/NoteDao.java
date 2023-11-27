@@ -18,9 +18,9 @@ public interface NoteDao {
     @Query("SELECT * FROM notes ORDER BY id DESC")
     List<Note> getAllNotes();
 
-    //Sua query
-    @Query("SELECT * FROM notes WHERE DATE(date_column) = DATE(:targetDate) ORDER BY id DESC")
-    List<Note> getNotesByDate(Date targetDate);
+    @Query("SELECT * FROM notes WHERE strftime('%Y-%m-%d', date_long_format) = strftime('%Y-%m-%d', :targetDate) ORDER BY id DESC")
+    List<Note> getNotesByDate(long targetDate);
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNote(Note note);

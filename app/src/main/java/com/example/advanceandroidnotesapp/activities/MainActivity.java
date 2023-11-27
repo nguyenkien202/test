@@ -33,7 +33,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Switch;
 
@@ -42,15 +42,17 @@ import com.example.advanceandroidnotesapp.adapters.NotesAdapter;
 import com.example.advanceandroidnotesapp.database.NotesDatabase;
 import com.example.advanceandroidnotesapp.entities.Note;
 import com.example.advanceandroidnotesapp.listeners.NotesListener;
+import com.example.advanceandroidnotesapp.util.DatePickerUtil;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements NotesListener {
+public class MainActivity extends AppCompatActivity implements NotesListener, DatePickerUtil.OnDateSelectedListener {
 
     public static final int REQUEST_CODE_ADD_NOTE = 1;
     public static final int REQUEST_CODE_UPDATE_NOTE = 2;
@@ -64,27 +66,19 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     private int noteClickedPosition = -1;
     private AlertDialog dialogAddURL;
-    private DatePicker datePicker;
+    private TextView textChooseDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        datePicker = findViewById(R.id.date_time_picker);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
-                @Override
-                public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
-                    int year = i;
-                    int month = i1;
-                    int day = i2;
-                    LocalDate localDate = LocalDate.of(year, month, day);
-                    Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    getNoteByDate(date);
-
-                }
-            });
-        }
+        textChooseDate = findViewById(R.id.tv_choose_date);
+        textChooseDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerUtil.showDatePicker(MainActivity.this,MainActivity.this);
+            }
+        });
 
         ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
         imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
@@ -219,45 +213,6 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
     }
 
-    private void getNoteByDate(Date date) {
-
-        @SuppressLint("StaticFieldLeak")
-        class GetNotesTask extends AsyncTask<Void, Void, List<Note>> {
-
-            @Override
-            protected List<Note> doInBackground(Void... voids) {
-                return NotesDatabase
-                        .getDatabase(getApplicationContext())
-                        .noteDao().getAllNoteByDate(date);
-            }
-
-            @Override
-            protected void onPostExecute(List<Note> notes) {
-                super.onPostExecute(notes);
-                // For now, we just print notes in logcat. Later on, we will display it n recycle view.
-                if (requestCode == REQUEST_CODE_SHOW_NOTES) {
-                    //add
-                    noteList.clear();
-                    //end
-                    noteList.addAll(notes);
-                    notesAdapter.notifyDataSetChanged();
-                } else if (requestCode == REQUEST_CODE_ADD_NOTE) {
-                    noteList.add(0, notes.get(0));
-                    notesAdapter.notifyItemInserted(0);
-                    notesRecyclerView.smoothScrollToPosition(0);
-                } else if (requestCode == REQUEST_CODE_UPDATE_NOTE) {
-                    noteList.remove(noteClickedPosition);
-                    if (isNoteDeleted) {
-                        notesAdapter.notifyItemRemoved(noteClickedPosition);
-                    } else {
-                        noteList.add(noteClickedPosition, notes.get(noteClickedPosition));
-                        notesAdapter.notifyItemChanged(noteClickedPosition);
-                    }
-                }
-            }
-        }
-        new GetNotesTask().execute();
-    }
 
     private void getNotes(final int requestCode, final boolean isNoteDeleted) {
 
@@ -381,12 +336,16 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     mainLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.switch_on));
-                    change.setEnabled(true);
                 } else {
                     mainLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.switch_off));
-                    change.setEnabled(false);
                 }
             }
         });
+    }
+
+
+    @Override
+    public void onDateSelected(int year, int month, int day) {
+        notesAdapter.searchNoteByDate(year, month,day);
     }
 }
