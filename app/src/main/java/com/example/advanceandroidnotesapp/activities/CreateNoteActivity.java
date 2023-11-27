@@ -44,15 +44,17 @@ import android.widget.Toast;
 import com.example.advanceandroidnotesapp.R;
 import com.example.advanceandroidnotesapp.database.NotesDatabase;
 import com.example.advanceandroidnotesapp.entities.Note;
+import com.example.advanceandroidnotesapp.util.DatePickerUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class CreateNoteActivity extends AppCompatActivity {
+public class CreateNoteActivity extends AppCompatActivity implements DatePickerUtil.OnDateSelectedListener{
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textDateTime;
@@ -76,7 +78,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     private AlertDialog dialogDeleteNote;
 
     private Note alreadyAvailableNote;
-
+    private long dateTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +101,12 @@ public class CreateNoteActivity extends AppCompatActivity {
         textWebURL = findViewById(R.id.textWebURL);
         layoutWebURL = findViewById(R.id.layoutWebURL);
 
+        textDateTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerUtil.showDatePicker(CreateNoteActivity.this,CreateNoteActivity.this);
+            }
+        });
         textDateTime.setText(
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()) // Saturday, 13 June 2020 21:09 PM
                         .format(new Date())
@@ -198,7 +206,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setDatetime(textDateTime.getText().toString());
         note.setColor(selectedNoteColor);
         note.setImagePath(seletedImagePath);
-        note.setDateLongFormat(System.currentTimeMillis());
+        note.setDateLongFormat(dateTime);
 
         if(layoutWebURL.getVisibility() == View.VISIBLE){
             note.setWebLink(textWebURL.getText().toString());
@@ -634,5 +642,14 @@ public class CreateNoteActivity extends AppCompatActivity {
         inputNoteText.setTextAlignment(textAlignment);
         Spannable spannableString = new SpannableStringBuilder(inputNoteText.getText());
         inputNoteText.setText(spannableString);
+    }
+
+    @Override
+    public void onDateSelected(int year, int month, int day) {
+        String dateTime2 = "Năm"+ year + "Tháng" + month + "Ngày" +day;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year,month - 1,day);
+        dateTime = calendar.getTimeInMillis();
+        textDateTime.setText(dateTime2);
     }
 }
